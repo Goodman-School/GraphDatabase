@@ -19,12 +19,17 @@ MERGE (e:Employee {employeeID:row.EmployeeID})
 LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf36604061bf407aa8cd08608/raw/8bdd36dfc88381995e6823ff3f419b5a0cb8ac4f/categories.csv' AS row
 MERGE (c:Category {categoryID: row.CategoryID})
   ON CREATE SET c.categoryName = row.CategoryName, c.description = row.Description;
+// Create customers
+LOAD CSV WITH HEADERS FROM 'https://github.com/neo4j-documentation/developer-resources/raw/gh-pages/data/northwind/customers.csv' AS row
+MERGE (customer:Customer {customerID: row.CustomerID, companyName:row.CompanyName, contactName:row.ContactName, city:row.City});
+//add INDEX
 CREATE INDEX product_id FOR (p:Product) ON (p.productID);
 CREATE INDEX product_name FOR (p:Product) ON (p.productName);
 CREATE INDEX supplier_id FOR (s:Supplier) ON (s.supplierID);
 CREATE INDEX employee_id FOR (e:Employee) ON (e.employeeID);
 CREATE INDEX category_id FOR (c:Category) ON (c.categoryID);
 CREATE CONSTRAINT order_id ON (o:Order) ASSERT o.orderID IS UNIQUE;
+CREATE CONSTRAINT customer_id ON (C:Customer) ASSERT o.customerID IS UNIQUE;
 CALL db.awaitIndexes();
 // Create relationships between orders and products
 LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf36604061bf407aa8cd08608/raw/8bdd36dfc88381995e6823ff3f419b5a0cb8ac4f/orders.csv' AS row
@@ -54,3 +59,8 @@ LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf366
 MATCH (employee:Employee {employeeID: row.EmployeeID})
 MATCH (manager:Employee {employeeID: row.ReportsTo})
 MERGE (employee)-[:REPORTS_TO]->(manager);
+// Create relationships between orders and customer
+LOAD CSV WITH HEADERS FROM 'https://gist.githubusercontent.com/jexp/054bc6baf36604061bf407aa8cd08608/raw/8bdd36dfc88381995e6823ff3f419b5a0cb8ac4f/orders.csv' AS row
+MATCH (order:Order {orderID: row.OrderID})
+MATCH (customer:Customer {customerID: row.CustomerID})
+MERGE (customer)-[:ORDERED]->(order);
