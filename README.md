@@ -6,9 +6,9 @@ Updated 2023-11-12
 
 # Zack Dai
 
-# Content
+# Content (PLEASE USE THE PPT VERSION FOR CLASSES AFTER 2023 FALL)
 
-ppt version: [Graph Database.pptx](Graph%20Database.pptx)
+ppt version: [Graph Database_V2.pptx](https://github.com/Goodman-School/GraphDatabase/raw/main/Graph%20Database%20Neo4j%202023v2.pptx)
 
 * Part1 Graph Database Introduction
   * Graph Database
